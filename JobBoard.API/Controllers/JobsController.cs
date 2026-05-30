@@ -25,6 +25,8 @@ namespace JobBoard.API.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        [ProducesResponseType(typeof(JobDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<JobDto>> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var job = await _jobService.GetJobByIdAsync(id, cancellationToken);
@@ -34,6 +36,8 @@ namespace JobBoard.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(JobDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JobDto>> Create([FromBody] CreateJobDto dto, CancellationToken cancellationToken)
         {
             var Created = await _jobService.CreateJobAsync(dto, cancellationToken);
@@ -42,6 +46,8 @@ namespace JobBoard.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateJobDto dto, CancellationToken cancellationToken)
         {
             var Updated = await _jobService.UpdateJobAsync(id, dto, cancellationToken);
@@ -52,6 +58,8 @@ namespace JobBoard.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromRoute]Guid id, CancellationToken cancellationToken)
         {
             var Deleted = await _jobService.DeleteJobAsync(id, cancellationToken);
