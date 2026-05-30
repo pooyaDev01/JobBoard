@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddValidatorsFromAssemblyContaining<CreateJobValidator>();
-builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateJobDtoValidator>();
 
 builder.Services.AddControllers();
 

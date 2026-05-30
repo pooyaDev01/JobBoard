@@ -6,9 +6,9 @@ using System.Text;
 
 namespace JobBoard.Application.Validators
 {
-    public class CreateJobValidator : AbstractValidator<CreateJobDto>
+    public class CreateJobDtoValidator : AbstractValidator<CreateJobDto>
     {
-        public CreateJobValidator()
+        public CreateJobDtoValidator()
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Job title is required")
