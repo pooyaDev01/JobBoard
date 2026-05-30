@@ -1,0 +1,22 @@
+﻿using JobBoard.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace JobBoard.Domain.Entities
+{
+    public class Job
+    {
+        public Guid Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
+        public string Location { get; set; } = string.Empty;
+        public decimal? SalaryMin { get; set; }
+        public decimal? SalaryMax { get; set; }
+        public EmploymentType EmploymentType { get; set; } = EmploymentType.FullTime;
+        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAtUtc {  get; set; } = DateTime.UtcNow;
+    }
+}
