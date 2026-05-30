@@ -1,7 +1,9 @@
 using FluentValidation;
 using JobBoard.Application.Abstractions;
+using JobBoard.Application.Services;
 using JobBoard.Application.Validators;
 using JobBoard.Infrastructure.Data;
+using JobBoard.Infrastructure.Persistence;
 using JobBoard.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<JobBoardDbContext>(options =>
 
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IJobService, JobService>();
 
 var app = builder.Build();
 

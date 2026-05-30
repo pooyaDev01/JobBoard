@@ -5,7 +5,7 @@ using System.Text;
 
 namespace JobBoard.Application.DTOs
 {
-    public class JobDto(
+    public record JobDto(
     Guid Id,
     string Title,
     string Description,
