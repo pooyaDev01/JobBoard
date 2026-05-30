@@ -14,10 +14,15 @@ namespace JobBoard.Application.Validators
                 .NotEmpty().WithMessage("Job title is required")
                 .MaximumLength(100).WithMessage("Job title should not exceed 100 characters");
 
+            RuleFor(x => x.Description).NotEmpty().WithMessage("The description field cannot be empty");
+
             RuleFor(x => x.CompanyName)
                 .NotEmpty().WithMessage("Company name is required.");
 
-             RuleFor(x => x.SalaryMin)
+            RuleFor(x => x.Location)
+                .NotEmpty().WithMessage("Location is required.");
+
+            RuleFor(x => x.SalaryMin)
                 .GreaterThan(0)
                 .When(x => x.SalaryMin.HasValue)
                 .WithMessage("The minimum wage should be more than zero");
