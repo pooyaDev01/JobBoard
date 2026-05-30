@@ -1,18 +1,24 @@
+using FluentValidation;
 using JobBoard.Application.Abstractions;
+using JobBoard.Application.Validators;
 using JobBoard.Infrastructure.Data;
 using JobBoard.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateJobValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<JobBoardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("JobBoardConnectionString")));
+
+
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 
