@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using JobBoard.Application.Abstractions;
+using JobBoard.Application.Mapping;
 using JobBoard.Application.Services;
 using JobBoard.Application.Validators.Jobs;
 using JobBoard.Infrastructure.Data;
@@ -21,6 +22,14 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<JobBoardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("JobBoardConnectionString")));
+
+var licenseKey = builder.Configuration["AutoMapper:LicenseKey"];
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.LicenseKey = licenseKey;
+}, 
+typeof(CompanyProfile).Assembly,
+typeof(JobProfile).Assembly);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateJobDtoValidator>();

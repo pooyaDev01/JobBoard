@@ -1,4 +1,5 @@
-﻿using JobBoard.Application.Abstractions;
+﻿using AutoMapper;
+using JobBoard.Application.Abstractions;
 using JobBoard.Application.DTOs.Companies;
 using JobBoard.Domain.Entities;
 using System;
@@ -11,26 +12,19 @@ namespace JobBoard.Application.Services
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CompanyService(ICompanyRepository companyRepository, IUnitOfWork unitOfWork)
+        public CompanyService(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _companyRepository = companyRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public async Task<IReadOnlyList<CompanyDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var companies = await _companyRepository.GetAllAsync(cancellationToken);
 
-            return companies
-                .Select(c => new CompanyDto(
-                    c.Id,
-                    c.Name,
-                    c.Description,
-                    c.Website,
-                    c.Location,
-                    c.CreatedAtUtc,
-                    c.UpdatedAtUtc))
-                .ToList();
+            return _mapper.Map<List<CompanyDto>>(companies);
         }
 
         public async Task<CompanyDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -40,38 +34,18 @@ namespace JobBoard.Application.Services
             if (company is null)
                 return null;
 
-            return new CompanyDto(
-                company.Id,
-                company.Name,
-                company.Description,
-                company.Website,
-                company.Location,
-                company.CreatedAtUtc,
-                company.UpdatedAtUtc);
+            return _mapper.Map<CompanyDto>(company);
         }
         public async Task<CompanyDto> CreateAsync(CreateCompanyDto dto, CancellationToken cancellationToken = default)
         {
-            var company = new Company
-            {
-                Id = Guid.NewGuid(),
-                Name = dto.Name!,
-                Description = dto.Description,
-                Website = dto.Website,
-                Location = dto.Location,
-                CreatedAtUtc = DateTime.UtcNow
-            };
+            var company = _mapper.Map<Company>(dto);
+            company.Id = Guid.NewGuid();
+            company.CreatedAtUtc = DateTime.UtcNow;
 
             await _companyRepository.AddAsync(company, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CompanyDto(
-                company.Id,
-                company.Name,
-                company.Description,
-                company.Website,
-                company.Location,
-                company.CreatedAtUtc,
-                company.UpdatedAtUtc);
+            return _mapper.Map<CompanyDto>(company);
         }
 
         public async Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto, CancellationToken cancellationToken = default)
@@ -81,10 +55,7 @@ namespace JobBoard.Application.Services
             if (company is null)
                 return false;
 
-            company.Name = dto.Name;
-            company.Description = dto.Description;
-            company.Website = dto.Website;
-            company.Location = dto.Location;
+            _mapper.Map(dto, company);
             company.UpdatedAtUtc = DateTime.UtcNow;
 
             _companyRepository.Update(company);
