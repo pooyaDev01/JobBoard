@@ -1,5 +1,6 @@
 ﻿using JobBoard.Application.Abstractions;
-using JobBoard.Application.DTOs;
+using JobBoard.Application.DTOs.Companies;
+using JobBoard.Application.DTOs.Jobs;
 using JobBoard.Application.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,10 @@ namespace JobBoard.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<JobDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<JobDto>>> GetAll(CancellationToken cancellationToken)
         {
-            var jobs = await _jobService.GetAllJobsAsync(cancellationToken);
+            var jobs = await _jobService.GetAllAsync(cancellationToken);
             return Ok(jobs);
         }
 
@@ -29,7 +31,7 @@ namespace JobBoard.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<JobDto>> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var job = await _jobService.GetJobByIdAsync(id, cancellationToken);
+            var job = await _jobService.GetByIdAsync(id, cancellationToken);
             if (job is null) return NotFound();
 
             return Ok(job);
@@ -40,7 +42,7 @@ namespace JobBoard.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JobDto>> Create([FromBody] CreateJobDto dto, CancellationToken cancellationToken)
         {
-            var Created = await _jobService.CreateJobAsync(dto, cancellationToken);
+            var Created = await _jobService.CreateAsync(dto, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = Created.Id }, Created);
         }
 
@@ -50,7 +52,7 @@ namespace JobBoard.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateJobDto dto, CancellationToken cancellationToken)
         {
-            var Updated = await _jobService.UpdateJobAsync(id, dto, cancellationToken);
+            var Updated = await _jobService.UpdateAsync(id, dto, cancellationToken);
             if(!Updated) return NotFound();
 
             return NoContent();
@@ -62,7 +64,7 @@ namespace JobBoard.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromRoute]Guid id, CancellationToken cancellationToken)
         {
-            var Deleted = await _jobService.DeleteJobAsync(id, cancellationToken);
+            var Deleted = await _jobService.DeleteAsync(id, cancellationToken);
             if(!Deleted) return NotFound();
 
             return NoContent();

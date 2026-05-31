@@ -2,7 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using JobBoard.Application.Abstractions;
 using JobBoard.Application.Services;
-using JobBoard.Application.Validators;
+using JobBoard.Application.Validators.Jobs;
 using JobBoard.Infrastructure.Data;
 using JobBoard.Infrastructure.Persistence;
 using JobBoard.Infrastructure.Repositories;
@@ -29,6 +29,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<UpdateJobDtoValidater>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 var app = builder.Build();
 
