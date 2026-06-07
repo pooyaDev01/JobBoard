@@ -1,5 +1,6 @@
 ﻿using JobBoard.Application.Abstractions;
 using JobBoard.Application.DTOs.Companies;
+using JobBoard.Application.DTOs.Jobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,16 +25,12 @@ namespace JobBoard.API.Controllers
             return Ok(companies);
         }
 
-        [HttpGet]
-        [Route("{id:guid}")]
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CompanyDto>> GetById(Guid id, CancellationToken cancellationToken)
         {
             var company = await _companyService.GetByIdAsync(id, cancellationToken);
-
-            if (company is null)
-                return NotFound();
 
             return Ok(company);
         }
@@ -48,31 +45,23 @@ namespace JobBoard.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdCompany.Id }, createdCompany);
         }
 
-        [HttpPut]
-        [Route("{id:guid}")]
+        [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCompanyDto dto, CancellationToken cancellationToken)
         {
-            var updated = await _companyService.UpdateAsync(id, dto, cancellationToken);
-
-            if (!updated)
-                return NotFound();
+            await _companyService.UpdateAsync(id, dto, cancellationToken);
 
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("{id:guid}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            var deleted = await _companyService.DeleteAsync(id, cancellationToken);
-
-            if (!deleted)
-                return NotFound();
+            await _companyService.DeleteAsync(id, cancellationToken);
 
             return NoContent();
         }

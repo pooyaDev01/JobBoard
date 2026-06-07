@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JobBoard.Application.Abstractions;
+using JobBoard.Application.Common.Exceptions;
 using JobBoard.Application.DTOs.Companies;
 using JobBoard.Domain.Entities;
 using System;
@@ -27,12 +28,12 @@ namespace JobBoard.Application.Services
             return _mapper.Map<List<CompanyDto>>(companies);
         }
 
-        public async Task<CompanyDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<CompanyDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var company = await _companyRepository.GetByIdAsync(id, cancellationToken);
 
             if (company is null)
-                return null;
+                throw new NotFoundException($"Company with ID {id} was not found.");
 
             return _mapper.Map<CompanyDto>(company);
         }
@@ -48,32 +49,28 @@ namespace JobBoard.Application.Services
             return _mapper.Map<CompanyDto>(company);
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(Guid id, UpdateCompanyDto dto, CancellationToken cancellationToken = default)
         {
             var company = await _companyRepository.GetByIdAsync(id, cancellationToken);
 
             if (company is null)
-                return false;
+                throw new NotFoundException($"Company with ID {id} was not found to update.");
 
             _mapper.Map(dto, company);
             company.UpdatedAtUtc = DateTime.UtcNow;
 
             _companyRepository.Update(company);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
         }
-        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var company = await _companyRepository.GetByIdAsync(id, cancellationToken);
 
             if (company is null)
-                return false;
+                throw new NotFoundException($"Company with ID {id} was not found to delete.");
 
             _companyRepository.Delete(company);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
         }
 
     }
