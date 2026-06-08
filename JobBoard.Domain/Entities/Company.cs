@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace JobBoard.Domain.Entities
+﻿namespace JobBoard.Domain.Entities
 {
     public class Company
     {

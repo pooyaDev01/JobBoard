@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using JobBoard.Application.DTOs.Companies;
 using JobBoard.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JobBoard.Application.Mapping
 {
