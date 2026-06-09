@@ -1,4 +1,6 @@
 ﻿using JobBoard.Application.Abstractions;
+using JobBoard.Application.Common.Pagination;
+using JobBoard.Application.Common.Queries;
 using JobBoard.Application.DTOs.Jobs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +17,11 @@ namespace JobBoard.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<JobDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyList<JobDto>>> GetAll(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(PagedResult<JobDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<PagedResult<JobDto>>> GetAll([FromQuery] JobQueryParameters parameters,CancellationToken cancellationToken)
         {
-            var jobs = await _jobService.GetAllAsync(cancellationToken);
+            var jobs = await _jobService.GetPagedAsync(parameters,cancellationToken);
+
             return Ok(jobs);
         }
 
