@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using JobBoard.Application.Abstractions;
 using JobBoard.Application.Common.Exceptions;
+using JobBoard.Application.Common.Pagination;
+using JobBoard.Application.Common.Queries;
 using JobBoard.Application.DTOs.Companies;
 using JobBoard.Domain.Entities;
 using System;
@@ -21,11 +23,19 @@ namespace JobBoard.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IReadOnlyList<CompanyDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<PagedResult<CompanyDto>> GetPagedAsync(CompanyQueryParameters parameters,CancellationToken cancellationToken = default)
         {
-            var companies = await _companyRepository.GetAllAsync(cancellationToken);
+            var pagedCompanies = await _companyRepository.GetPagedAsync(parameters, cancellationToken);
 
-            return _mapper.Map<List<CompanyDto>>(companies);
+            var companyDtos = _mapper.Map<IReadOnlyList<CompanyDto>>(pagedCompanies.Items);
+
+            return new PagedResult<CompanyDto>
+            {
+                Items = companyDtos,
+                PageNumber = pagedCompanies.PageNumber,
+                PageSize = pagedCompanies.PageSize,
+                TotalCount = pagedCompanies.TotalCount
+            };
         }
 
         public async Task<CompanyDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

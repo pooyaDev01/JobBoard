@@ -16,7 +16,7 @@ namespace JobBoard.Application.Common.Queries
         public decimal? SalaryMin { get; set; }
         public decimal? SalaryMax { get; set; }
 
-        public string? SortBy { get; set; } = "CreatedAtUtc";
+        public string? SortBy { get; set; } = "createdatutc";
         public string? SortDirection { get; set; } = "desc";
 
         public int? PageNumber { get; set; } = 1;

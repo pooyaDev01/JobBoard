@@ -18,7 +18,7 @@ namespace JobBoard.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(PagedResult<JobDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PagedResult<JobDto>>> GetAll([FromQuery] JobQueryParameters parameters,CancellationToken cancellationToken)
+        public async Task<ActionResult<PagedResult<JobDto>>> GetPaged([FromQuery] JobQueryParameters parameters,CancellationToken cancellationToken)
         {
             var jobs = await _jobService.GetPagedAsync(parameters,cancellationToken);
 
